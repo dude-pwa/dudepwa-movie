@@ -1,0 +1,51 @@
+<p id="notice"><%= notice %></p>
+
+<!-- ######### JUMBOTRON ################ -->
+<div class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="jumbotron">
+          <h1>Genre Movies</h1>
+          <div class="row">
+            <div class="col-md-12">
+              <ul>
+                <% tag_cloud Movie.tag_counts.order(:name), %w{s m l} do |tag, css_class| %>
+                  <li><%= link_to tag.name, tag_path(tag.name), class: css_class %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+            <% if user_signed_in? %>
+              <h2><%= link_to 'New Movie', new_movie_path %></h2>
+            <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ######### MOVIE ################ -->
+<div class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="text-center">Movie List</h1><br>
+      </div>
+    </div>
+    <div class="row">
+      <% @movies.each do |movie| %>
+        <div class="col-md-3">
+          <%= link_to (image_tag movie.cover.url(:medium)), movie %>
+          <h2><%= movie.title %></h2>
+          <p><%= raw movie.tag_list.map { |t| link_to t, tag_path(t) }.join(', ') %></p>
+          <% if user_signed_in? %>
+            <p><%= link_to 'Show', movie %> |
+            <%= link_to 'Edit', edit_movie_path(movie) %> |
+            <%= link_to 'Destroy', movie, method: :delete, data: { confirm: 'Are you sure?' } %></p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
